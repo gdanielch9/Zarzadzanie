@@ -27,7 +27,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	string fileName;			//Nazwa pliku do ktorego zostana wczytane dane
 	std::cout << "\nPodaj nazwe pliku: ";
 	//std::cin >> fileName;
-	fileName = "JACK1.dat";
+	fileName = "JACK7.dat";
 	std::cout << "Nazwa pliku " << fileName << endl;
 	file.open(fileName, std::ios::in);
 
@@ -91,7 +91,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		//obliczanie cmax
 		for(int i = 1; i <= liczbaZadan; i++) 
 		{
-			C[pi[i]]= C[pi[i-1]] >= dane[pi[i]-1].terminDostepnosci ? C[pi[i-1]] + dane[pi[i]-1].czasObslugiZad: dane[pi[i]-1].terminDostepnosci + dane[pi[i-1]].czasObslugiZad;
+			C[pi[i]] = C[pi[i-1]] >= dane[pi[i]-1].terminDostepnosci ? C[pi[i-1]] + dane[pi[i]-1].czasObslugiZad: dane[pi[i]-1].terminDostepnosci + dane[pi[i-1]].czasObslugiZad;
 		}
 
 		cout << "Cmax = " << C[liczbaZadan]<<endl;
