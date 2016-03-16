@@ -50,19 +50,19 @@ int main()
 	std::fstream file;			 //Plik z danymi.
 
 								 //tworzymy kolejke
-	priority_queue < Zadanie, vector < Zadanie >, PorownajQ > kolejkaQ;
-	priority_queue < Zadanie, vector < Zadanie >, PorownajR > kolejkaR;
+	priority_queue < Zadanie, vector < Zadanie >, PorownajQ > kolejkaQ; //Zbior G
+	priority_queue < Zadanie, vector < Zadanie >, PorownajR > kolejkaR; //Zbior N
 
 
 
 	string fileName;			//Nazwa pliku do ktorego zostana wczytane dane
 	std::cout << "\nPodaj nazwe pliku: ";
 	//std::cin >> fileName;
-	fileName = "SCHRAGE1.dat";
+	fileName = "SCHRAGE9.dat";
 	std::cout << "Nazwa pliku " << fileName << endl;
 	file.open(fileName, std::ios::in);
 
-	unsigned int liczbaZadan;	//format pliku: n  r p q r p q ...
+	int liczbaZadan;	//format pliku: n  r p q r p q ...
 
 
 	if (file.good() == true) {
@@ -79,48 +79,49 @@ int main()
 		}
 		//*****WYSWIETLANIE WCZYTANYCH DANYCH*****
 		cout << "Liczba zad: " << liczbaZadan << endl;
-		cout << "Wczytane dane: \n";
-		cout << liczbaZadan << endl;
+		//cout << "Wczytane dane: \n";
+		//cout << liczbaZadan << endl;
 
 
 		for (int i = 0; i < liczbaZadan; i++)
 		{
-			cout << dane[i].terminDostepnosci;
-			cout << " " << dane[i].czasObslugiZad;
-			cout << " " << dane[i].czasDostarczaniaZad << endl;
-			kolejkaQ.push(dane[i]); //wrzucenie do kolejki
+			//cout << dane[i].terminDostepnosci;
+			//cout << " " << dane[i].czasObslugiZad;
+			//cout << " " << dane[i].czasDostarczaniaZad << endl;
+		//	kolejkaQ.push(dane[i]); //do zbioru G nie wrzucamy, ma byc pusty ale ma byc kolejka
 			kolejkaR.push(dane[i]); //wrzucenie do kolejki
 
 		}
-		cout << "-------------   q  -----------------" << endl;
-
-		for (int i = 0; i < liczbaZadan; i++)
-		{
-			cout << kolejkaQ.top().terminDostepnosci << " ";
-			cout << kolejkaQ.top().czasObslugiZad << " ";
-			cout << kolejkaQ.top().czasDostarczaniaZad << endl;
-			kolejkaQ.pop();
-		}
-
-		cout << "----------- r  --------------" << endl;
-
-		for (int i = 0; i < liczbaZadan; i++)
-		{
-			cout << kolejkaR.top().terminDostepnosci << " ";
-			cout << kolejkaR.top().czasObslugiZad << " ";
-			cout << kolejkaR.top().czasDostarczaniaZad << endl;
-			kolejkaR.pop();
-		}
-
-
-
 		file.close();		//zamkniecie pliku
 	}
 	else cout << "Nie mozna wczytac pliku" << std::endl;
 
-	if (kolejkaR.empty() || kolejkaQ.empty())
+	//Algorytm Schrage
+	int t, k, Cmax;
+	t = k = Cmax = 0;
+	//             N                     G
+	while ( !(kolejkaR.empty()) || !(kolejkaQ.empty()) )
+	{
+		while (!(kolejkaR.empty()) && (kolejkaR.top().terminDostepnosci <= t))
+			{
+			//	cout << kolejkaR.top().terminDostepnosci << " ";
+				kolejkaQ.push(kolejkaR.top()); //wrzucenie do kolejki cale zadanie
+				kolejkaR.pop(); //wyrzucamy element ze zbioru N
+			}
+		if (kolejkaQ.empty()) //pkt 5, jezeli zbior G jest pusty
+		{
+			t = kolejkaR.top().terminDostepnosci;
+			continue;
+		}
+		k++;
+		t = t + kolejkaQ.top().czasObslugiZad;
+		Cmax = max(Cmax, t + kolejkaQ.top().czasDostarczaniaZad);
+		kolejkaQ.pop();
+	}
 
 
-		getchar();
+	cout << "\n" << "Cmax: " << Cmax;
+
+	getchar();
 	return 0;
 }
